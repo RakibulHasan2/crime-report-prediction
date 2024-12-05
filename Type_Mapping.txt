@@ -1,0 +1,10 @@
+Crime Committed by Juveniles - 0
+Crime against Children - 1
+Crime against Senior Citizen - 2
+Crime against Women - 3
+Drug Trafficking - 4
+Kidnapping - 5
+Murder - 6
+Rape - 7
+Robbery - 8
+Theft - 9
