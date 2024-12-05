@@ -6,52 +6,52 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load the pickled dataset
-# with open('crime_data.pkl', 'rb') as file:
-#     crime_data = pickle.load(file)
+with open('model.pkl', 'rb') as file:
+    crime_data = pickle.load(file)
 
 @app.route('/')
 def home():
     return "Welcome to the Urban Safety API!"
 
-# @app.route('/get_data', methods=['GET'])
-# def get_data():
-#     # Example: Return the first 5 rows of the dataset
-#     return jsonify(crime_data.head().to_dict(orient='records'))
+@app.route ('/predict', methods =['POST']) 
+def predict_result (): 
+    
+    city_names = { '0': 'Rangpur', '1': 'Rajshahi', '2': 'Barisal', '3': 'Khulna', '4': 'Mymensingh', '5': 'Chittagong', '6': 'Sylhet', '7': 'Dhaka'}
+    
+    crimes_names = { '0': 'Crime Committed by Juveniles', '1': 'Crime against Children', '2': 'Crime against Senior Citizen', '3': 'Crime against Women', '4': 'Drug Trafficking', '5': 'Kidnapping', '6': 'Murder', '7': 'Rape', '8': 'Robbery', '9':'Theft'}
+    
+    population = { '0': 63.50, '1': 85.00, '2': 87.00, '3': 21.50, '4': 163.10, '5': 23.60, '6': 77.50, '7': 21.70, '8': 30.70, '9': 29.20, '10': 21.20, '11': 141.10, '12': 20.30, '13': 29.00, '14': 184.10, '15': 25.00, '16': 20.50, '17': 50.50, '18':45.80}
+    
+    city_code = request.form["City"] 
+    crime_code = request.form['Crime'] 
+    year = request.form['Year'] 
+    pop = population[city_code] 
 
-# @app.route('/city_data', methods=['GET'])
-# def city_data():
-#     # Get city from the query string
-#     city = request.args.get('city', default=None, type=str)
+    # Here increasing / decreasing the population as per the year.
+    # Assuming that the population growth rate is 1% per year.
+    year_diff = int(year) - 2011;
+    pop = pop + 0.01*year_diff*pop
 
-#     if city:
-#         city_data = crime_data[crime_data['City'].str.contains(city, case=False)]
-#         if not city_data.empty:
-#             return jsonify(city_data.to_dict(orient='records'))
-#         else:
-#             return jsonify({"message": "No data found for the specified city."}), 404
-#     else:
-#         return jsonify({"message": "City parameter is required."}), 400
+    
+    crime_rate = crime_data.predict ([[year, city_code, pop, crime_code]])[0] 
+    
+    city_name = city_names[city_code] 
+    
+    crime_type =  crimes_names[crime_code] 
+    
+    if crime_rate <= 1:
+        crime_status = "Very Low Crime Area" 
+    elif crime_rate <= 5:
+        crime_status = "Low Crime Area"
+    elif crime_rate <= 15:
+        crime_status = "High Crime Area"
+    else:
+        crime_status = "Very High Crime Area" 
+    
+    cases = math.ceil(crime_rate * pop)
+    
+    return render_template('result.html', city_name=city_name, crime_type=crime_type, year=year, crime_status=crime_status, crime_rate=crime_rate, cases=cases, population=pop)
 
-# @app.route('/predict', methods=['GET'])
-# def predict():
-#     # Example route for a prediction (for now, just returns a filtered set)
-#     city = request.args.get('city', default=None, type=str)
-#     crime_type = request.args.get('crime_type', default=None, type=str)
-
-#     if city and crime_type:
-#         filtered_data = crime_data[(crime_data['City'].str.contains(city, case=False)) & 
-#                                    (crime_data['Crime against Women'].notna())]
-        
-#         if filtered_data.empty:
-#             return jsonify({"message": "No data found for the specified city and crime type."}), 404
-
-#         # Simple logic to show filtered results for specific crime types
-#         crime_column = 'Crime against Women' if crime_type.lower() == 'women' else 'Theft'
-#         result = filtered_data[['City', 'Population', crime_column]]
-        
-#         return jsonify(result.to_dict(orient='records'))
-#     else:
-#         return jsonify({"message": "City and crime_type parameters are required."}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
