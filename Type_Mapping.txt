@@ -1,7 +1,7 @@
-Crime Committed by Juveniles - 0
-Crime against Children - 1
-Crime against Senior Citizen - 2
-Crime against Women - 3
+Crime Against Children - 0
+Crime Against Senior Citizen - 1
+Crime Against Women - 2
+Crime Committed by Juveniles - 3
 Drug Trafficking - 4
 Kidnapping - 5
 Murder - 6

@@ -1,8 +1,0 @@
-Barisal - 0
-Chittagong - 1
-Dhaka - 2
-Khulna - 3
-Mymensingh - 4
-Rajshahi - 5
-Rangpur - 6
-Sylhet - 7

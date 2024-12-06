@@ -20,11 +20,73 @@ def predict_result():
         data = request.get_json(force=True)
       
 
-        # Define mappings for city names to city codes and crime types
-        city_names = {
-            'Rangpur': '6', 'Rajshahi': '5', 'Barisal': '0', 'Khulna': '3',
-            'Mymensingh': '4', 'Chittagong': '1', 'Sylhet': '7', 'Dhaka': '2'
-        }
+        # Define mappings for district names to district codes and crime types
+        district_names ={
+    'Bagerhat': '0',
+    'Bandarban': '1',
+    'Barguna': '2',
+    'Barisal': '3',
+    'Bhola': '4',
+    'Bogra': '5',
+    'Brahmanbaria': '6',
+    'Chandpur': '7',
+    'Chittagong': '8',
+    'Chuadanga': '9',
+    'Comilla': '10',
+    'Cox\'s Bazar': '11',
+    'Dhaka': '12',
+    'Dinajpur': '13',
+    'Faridpur': '14',
+    'Feni': '15',
+    'Gaibandha': '16',
+    'Gazipur': '17',
+    'Gopalganj': '18',
+    'Habiganj': '19',
+    'Jamalpur': '20',
+    'Jessore': '21',
+    'Jhalokati': '22',
+    'Jhenaidah': '23',
+    'Joypurhat': '24',
+    'Khagrachari': '25',
+    'Khulna': '26',
+    'Kishoreganj': '27',
+    'Kurigram': '28',
+    'Kushtia': '29',
+    'Lakshmipur': '30',
+    'Lalmonirhat': '31',
+    'Madaripur': '32',
+    'Magura': '33',
+    'Manikganj': '34',
+    'Meherpur': '35',
+    'Moulvibazar': '36',
+    'Munshiganj': '37',
+    'Mymensingh': '38',
+    'Naogaon': '39',
+    'Narail': '40',
+    'Narayanganj': '41',
+    'Narsingdi': '42',
+    'Natore': '43',
+    'Netrokona': '44',
+    'Nilphamari': '45',
+    'Noakhali': '46',
+    'Pabna': '47',
+    'Panchagarh': '48',
+    'Patuakhali': '49',
+    'Pirojpur': '50',
+    'Rajbari': '51',
+    'Rajshahi': '52',
+    'Rangamati': '53',
+    'Rangpur': '54',
+    'Satkhira': '55',
+    'Shariatpur': '56',
+    'Sherpur': '57',
+    'Sirajganj': '58',
+    'Sunamganj': '59',
+    'Sylhet': '60',
+    'Tangail': '61',
+    'Thakurgaon': '62'
+}
+
 
         crimes_names = {
         'Crime Committed by Juveniles': '0',
@@ -43,24 +105,24 @@ def predict_result():
             '0': 63.50, '1': 85.00, '2': 87.00, '3': 21.50, '4': 163.10, '5': 23.60, '6': 77.50, '7': 21.70
         }
 
-        # Get city and crime codes from input data
-        city_name = data["City"]
-        city_code = city_names[city_name]
+        # Get district and crime codes from input data
+        district_name = data["district"]
+        district_code = district_names[district_name]
         
         crime_name = data["Crime"]
         crime_code = crimes_names[crime_name]
 
         year = data["Year"]
 
-        # Map the city name to city code
-        if city_name not in city_names:
-            return jsonify({"error": f"City '{city_name}' not found"}), 400
+        # Map the district name to district code
+        if district_name not in district_names:
+            return jsonify({"error": f"district '{district_name}' not found"}), 400
 
-        # Get population for the city
-        pop = population[city_code]
+        # Get population for the district
+        pop = population[district_code]
 
         # Predict the crime rate using the model
-        crime_rate = crime_data.predict([[year, city_code, crime_code, pop]])[0]
+        crime_rate = crime_data.predict([[year, district_code, crime_code, pop]])[0]
         print(crime_rate)
 
         # Determine the crime status based on the predicted crime rate
@@ -79,7 +141,7 @@ def predict_result():
 
         # Return the result as JSON
         return jsonify({
-            "City": city_name,
+            "district": district_name,
             "Crime_Type": crime_name,
             "Year": year,
             "Crime_Status": crime_status,
