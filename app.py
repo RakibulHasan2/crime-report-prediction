@@ -27,7 +27,7 @@ def predict_result ():
     year = request.form['Year'] 
     pop = population[city_code] 
 
-    # Here increasing / decreasing the population as per the year.
+    # Here increasing / decreasing the population as per the year
     # Assuming that the population growth rate is 1% per year.
     year_diff = int(year) - 2011;
     pop = pop + 0.01*year_diff*pop
